@@ -1,91 +1,138 @@
-import React from 'react'
-import Link from 'next/link'
-import Head from '../components/head'
-import Nav from '../components/nav'
+import React, { Component } from "react"
+import { Layout, Typography, Row, Col, Card, Table, Divider, Tag } from "antd"
+import { connect } from "react-redux"
+import cookie from "js-cookie"
 
-const Home = () => (
-  <div>
-    <Head title="Home" />
-    <Nav />
+import Navbar from "../components/navbar"
+import Navigation from "../components/navigation"
+import initialize from "../utils/initialize"
 
-    <div className="hero">
-      <h1 className="title">Welcome to Next!</h1>
-      <p className="description">
-        To get started, edit <code>pages/index.js</code> and save to reload.
-      </p>
+import "../static/less/style.less"
 
-      <div className="row">
-        <Link href="https://github.com/zeit/next.js#getting-started">
-          <a className="card">
-            <h3>Getting Started &rarr;</h3>
-            <p>Learn more about Next on Github and in their examples</p>
-          </a>
-        </Link>
-        <Link href="https://open.segment.com/create-next-app">
-          <a className="card">
-            <h3>Examples &rarr;</h3>
-            <p>
-              Find other example boilerplates on the{' '}
-              <code>create-next-app</code> site
-            </p>
-          </a>
-        </Link>
-        <Link href="https://github.com/segmentio/create-next-app">
-          <a className="card">
-            <h3>Create Next App &rarr;</h3>
-            <p>Was this tool helpful? Let us know how we can improve it</p>
-          </a>
-        </Link>
-      </div>
-    </div>
+class Index extends Component {
+	constructor() {
+		super()
+		this.state = {
+			isLoggedIn: false,
+			token: cookie.get("token")
+		}
+	}
 
-    <style jsx>{`
-      .hero {
-        width: 100%;
-        color: #333;
-      }
-      .title {
-        margin: 0;
-        width: 100%;
-        padding-top: 80px;
-        line-height: 1.15;
-        font-size: 48px;
-      }
-      .title,
-      .description {
-        text-align: center;
-      }
-      .row {
-        max-width: 880px;
-        margin: 80px auto 40px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .card {
-        padding: 18px 18px 24px;
-        width: 220px;
-        text-align: left;
-        text-decoration: none;
-        color: #434343;
-        border: 1px solid #9b9b9b;
-      }
-      .card:hover {
-        border-color: #067df7;
-      }
-      .card h3 {
-        margin: 0;
-        color: #067df7;
-        font-size: 18px;
-      }
-      .card p {
-        margin: 0;
-        padding: 12px 0 0;
-        font-size: 13px;
-        color: #333;
-      }
-    `}</style>
-  </div>
-)
+	static async getInitialProps(ctx) {
+		await initialize(ctx)
+	}
 
-export default Home
+	render() {
+		const { Content } = Layout
+		const { Title, Text } = Typography
+		return (
+			<Layout>
+				<Navbar isLoggedIn={true} />
+				<Navigation icon='user' text='Dashboard' />
+				<Row justify='space-around' type='flex'>
+					<Col
+						span={20}
+						style={{ paddingTop: "30px", paddingBottom: "30px", minHeight: "500px" }}
+					>
+						<Title>Dashboard</Title>
+						<Content>
+							<Row gutter={16}>
+								<Col span={6} md={6} sm={12} xs={24}>
+									<Card
+										hoverable
+										cover={
+											<img
+												alt='image1'
+												style={{ width: "100%" }}
+												src='/static/images/hotel-1.jpg'
+											/>
+										}
+									>
+										<Card.Meta
+											title='Hotels'
+											description='burger with patty and cheese'
+										/>
+									</Card>
+								</Col>
+								<Col span={6} md={6} sm={12} xs={24}>
+									<Card
+										hoverable
+										cover={
+											<img
+												alt='image2'
+												style={{ width: "100%" }}
+												src='/static/images/hotel-2.jpg'
+											/>
+										}
+									>
+										<Card.Meta
+											title='Rooms'
+											description='burger on white ceramic plate'
+										/>
+									</Card>
+								</Col>
+								<Col span={6} md={6} sm={12} xs={24}>
+									<Card
+										hoverable
+										cover={
+											<img
+												alt='image3'
+												style={{ width: "100%" }}
+												src='/static/images/hotel-3.jpg'
+											/>
+										}
+									>
+										<Card.Meta
+											title='Room Types'
+											description='burger with tomato and onion'
+										/>
+									</Card>
+								</Col>
+								<Col span={6} md={6} sm={12} xs={24}>
+									<Card
+										hoverable
+										cover={
+											<img
+												alt='image4'
+												style={{ width: "100%" }}
+												src='/static/images/hotel-4.jpg'
+											/>
+										}
+									>
+										<Card.Meta
+											title='Bookings'
+											description='burger with vegetables'
+										/>
+									</Card>
+								</Col>
+							</Row>
+						</Content>
+
+						{/* <Row gutter={24} style={{ marginTop: "30px" }}>
+							<Col span={12} md={12}>
+								<Title level={3}>List of Hotels</Title>
+								<Card />
+							</Col>
+							<Col span={12} md={12}>
+								<Title level={3}>List of Bookings</Title>
+							</Col>
+						</Row> */}
+					</Col>
+				</Row>
+			</Layout>
+		)
+	}
+}
+
+const mapStateToProps = state => {
+	return {
+		auth: state.auth,
+		booking: state.booking,
+		hotel: state.hotel,
+		priceList: state.priceList,
+		room: state.room,
+		roomType: state.roomType
+	}
+}
+
+export default connect(mapStateToProps)(Index)
