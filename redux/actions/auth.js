@@ -7,7 +7,7 @@ export const getStatus = token => {
 		type: "GET_STATUS",
 		payload: axios({
 			method: "get",
-			url: `${server.api}/auth/check`,
+			url: `${server.api}/auth/verify`,
 			headers: {
 				Authorization: `${token}`
 			}

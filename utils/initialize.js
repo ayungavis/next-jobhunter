@@ -12,6 +12,7 @@ export default function(ctx) {
 				ctx.res.end()
 			} else {
 				const action = getStatus(token.split("=")[1])
+				ctx.store.dispatch(action)
 				return action.payload
 					.then(payload => {
 						return { user: payload.data }

@@ -20,7 +20,7 @@ export default withRedux(initStore, { debug: true })(
 			return (
 				<Container>
 					<Head>
-						<title>Booking Hotel</title>
+						<title>Jobhunter</title>
 					</Head>
 					<Provider store={store}>
 						<Component {...pageProps} />

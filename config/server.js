@@ -1,5 +1,5 @@
 const server = {
-	api: "http://localhost:8000/api"
+	api: "http://localhost/jobhunter/api"
 }
 
 export default server

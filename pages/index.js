@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Layout, Typography, Row, Col, Card, Table, Divider, Tag } from "antd"
+import { Layout, Typography, Row, Col, Card } from "antd"
 import { connect } from "react-redux"
 import cookie from "js-cookie"
 
@@ -27,7 +27,7 @@ class Index extends Component {
 		const { Title, Text } = Typography
 		return (
 			<Layout>
-				<Navbar isLoggedIn={true} />
+				<Navbar isLoggedIn={this.props.auth.isLogin} />
 				<Navigation icon='user' text='Dashboard' />
 				<Row justify='space-around' type='flex'>
 					<Col
@@ -126,12 +126,7 @@ class Index extends Component {
 
 const mapStateToProps = state => {
 	return {
-		auth: state.auth,
-		booking: state.booking,
-		hotel: state.hotel,
-		priceList: state.priceList,
-		room: state.room,
-		roomType: state.roomType
+		auth: state.auth
 	}
 }
 
