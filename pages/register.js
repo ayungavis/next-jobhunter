@@ -1,13 +1,13 @@
 import React, { Component } from "react"
-import { Typography, Icon, Row, Col, Layout, Form, Input, Button, Checkbox } from "antd"
+import { Typography, Icon, Row, Col, Layout, Form, Input, Button } from "antd"
 import { connect } from "react-redux"
 import Link from "next/link"
 import Router from "next/router"
 
-import { getStatus, postLogin } from "../redux/actions/auth"
+import { getStatus, postRegister } from "../redux/actions/auth"
 import { setCookie } from "../utils/cookie"
 
-class Login extends Component {
+class Register extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -44,14 +44,17 @@ class Login extends Component {
 			if (!err) {
 				this.props
 					.dispatch(
-						postLogin({
+						postRegister({
+							first_name: values.first_name,
+							last_name: values.last_name,
+							username: values.username,
 							email: values.email,
 							password: values.password
 						})
 					)
 					.then(res => {
 						setCookie("token", this.props.auth.data.token)
-						Router.push("/users/feed")
+						Router.push("/")
 					})
 			}
 		})
@@ -97,13 +100,85 @@ class Login extends Component {
 										paddingRight: "50px"
 									}}
 								>
-									<Title>Welcome back!</Title>
+									<Title>Pendaftaran Akun</Title>
 									<Text>
-										Untuk tetap terhubung dengan kami silahkan masuk dengan
-										informasi pribadimu menggunakan email dan password 🔔
+										Untuk bisa menggunakan fitur kami silahkan mendaftar akun
+										baru terlebih dahulu menggunakan informasi yang benar ☕
 									</Text>
 									<Content style={{ paddingTop: "30px" }}>
 										<Form onSubmit={this.handleSubmit} className='login-form'>
+											<Row gutter={20}>
+												<Col span={12}>
+													<Form.Item hasFeedback>
+														{getFieldDecorator("first_name", {
+															rules: [
+																{
+																	required: true,
+																	message:
+																		"Please input first name!"
+																}
+															]
+														})(
+															<Input
+																prefix={
+																	<Icon
+																		type='line'
+																		style={{
+																			color: "rgba(0,0,0,.25)"
+																		}}
+																	/>
+																}
+																placeholder='First name'
+															/>
+														)}
+													</Form.Item>
+												</Col>
+												<Col span={12}>
+													<Form.Item hasFeedback>
+														{getFieldDecorator("last_name", {
+															rules: [
+																{
+																	required: true,
+																	message:
+																		"Please input last name!"
+																}
+															]
+														})(
+															<Input
+																prefix={
+																	<Icon
+																		type='line'
+																		style={{
+																			color: "rgba(0,0,0,.25)"
+																		}}
+																	/>
+																}
+																placeholder='Last name'
+															/>
+														)}
+													</Form.Item>
+												</Col>
+											</Row>
+											<Form.Item hasFeedback>
+												{getFieldDecorator("username", {
+													rules: [
+														{
+															required: true,
+															message: "Please input your username!"
+														}
+													]
+												})(
+													<Input
+														prefix={
+															<Icon
+																type='user'
+																style={{ color: "rgba(0,0,0,.25)" }}
+															/>
+														}
+														placeholder='Username'
+													/>
+												)}
+											</Form.Item>
 											<Form.Item hasFeedback>
 												{getFieldDecorator("email", {
 													rules: [
@@ -151,17 +226,6 @@ class Login extends Component {
 											</Form.Item>
 
 											<Form.Item>
-												<Row justify='space-between' type='flex'>
-													{getFieldDecorator("remember", {
-														valuePropName: "checked",
-														initialValue: false
-													})(<Checkbox>Remember me</Checkbox>)}
-													<Link href=''>
-														<a className='login-form-forgot'>
-															Forgot password
-														</a>
-													</Link>
-												</Row>
 												<Row>
 													<Button
 														type='primary'
@@ -172,14 +236,14 @@ class Login extends Component {
 														onClick={this.enterLoading}
 														block
 													>
-														Log in
+														Register
 													</Button>
 												</Row>
 												<Row justify='center' type='flex'>
 													<div>
 														Or{" "}
-														<Link href='/register'>
-															<a>register now!</a>
+														<Link href='/login'>
+															<a>login now!</a>
 														</Link>
 													</div>
 												</Row>
@@ -202,6 +266,6 @@ const mapStateToProps = state => {
 	}
 }
 
-const WrappedLogin = Form.create()(Login)
+const WrappedRegister = Form.create()(Register)
 
-export default connect(mapStateToProps)(WrappedLogin)
+export default connect(mapStateToProps)(WrappedRegister)

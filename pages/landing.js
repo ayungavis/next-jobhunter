@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { Layout, Typography, Row, Col, Form, Input, Icon, Button } from "antd"
 import { connect } from "react-redux"
+import Router from "next/router"
 
 import Navbar from "../components/navbar"
 import { getStatus } from "../redux/actions/auth"
@@ -33,6 +34,7 @@ class Landing extends Component {
 
 	enterLoading = () => {
 		this.setState({ loading: true })
+		Router.push("/jobs/search")
 	}
 
 	render() {
@@ -41,7 +43,7 @@ class Landing extends Component {
 		const { getFieldDecorator } = this.props.form
 		return (
 			<Layout>
-				<Navbar isLoggedIn={this.props.auth.isLogin} color='transparent' />
+				<Navbar isLoggedIn={this.props.isLoggedIn} color='transparent' />
 				<Content>
 					<Row
 						justify='center'

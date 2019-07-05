@@ -19,7 +19,7 @@ class Navbar extends Component {
 
 	handleLogout = () => {
 		removeCookie("token")
-		Router.push("/login")
+		Router.push("/")
 	}
 
 	render() {
@@ -32,19 +32,23 @@ class Navbar extends Component {
 					<Col span={23}>
 						<Row justify='space-between' type='flex'>
 							<Col span={12} md={12} xs={24}>
-								<Link href='/'>
-									<a>
-										{this.props.isLoggedIn ? (
+								{this.props.isLoggedIn ? (
+									<Link href='/users/feed'>
+										<a>
 											<img
 												src='../static/images/icon.png'
 												alt='logo'
 												width='40px'
 											/>
-										) : (
+										</a>
+									</Link>
+								) : (
+									<Link href='/'>
+										<a>
 											<img src='../static/images/logo.png' alt='logo' />
-										)}
-									</a>
-								</Link>
+										</a>
+									</Link>
+								)}
 							</Col>
 							{this.props.isLoggedIn ? (
 								<Menu
@@ -57,13 +61,13 @@ class Navbar extends Component {
 									}}
 								>
 									<Menu.Item key='1'>
-										<Link href='/'>
-											<a>Dashboard</a>
+										<Link href='/users/feed'>
+											<a>Beranda</a>
 										</Link>
 									</Menu.Item>
 									<Menu.Item key='2'>
-										<Link href='/landing'>
-											<a>Landing</a>
+										<Link href='/jobs/search'>
+											<a>Pekerjaan</a>
 										</Link>
 									</Menu.Item>
 									<SubMenu

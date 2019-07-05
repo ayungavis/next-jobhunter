@@ -7,7 +7,7 @@ export default function(ctx) {
 		if (token) {
 			if (ctx.pathname == "/login") {
 				ctx.res.writeHead(302, {
-					Location: "/"
+					Location: "/users/feed"
 				})
 				ctx.res.end()
 			} else {
