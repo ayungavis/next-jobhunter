@@ -16,6 +16,7 @@ import {
 	Collapse
 } from "antd"
 import { connect } from "react-redux"
+import Link from "next/link"
 
 import Navbar from "../../components/navbar"
 import { getStatus } from "../../redux/actions/auth"
@@ -77,8 +78,13 @@ class JobSearch extends Component {
 							<img src='../static/images/icon.png' alt='photo' width={80} />
 						</Col>
 						<Col span={14} justify='start' align='top' type='flex'>
-							<Text style={{ fontSize: 24 }} strong>
-								Full Stack Developer
+							<Text
+								style={{ fontSize: 24, marginLeft: "-10px", color: "black" }}
+								strong
+							>
+								<Link href='/jobs/detail'>
+									<a>Full Stack Developer</a>
+								</Link>
 							</Text>
 							<br />
 							<Text style={{ fontSize: 16 }} strong>
