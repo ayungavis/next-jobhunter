@@ -56,7 +56,7 @@ class Navbar extends Component {
 									onClick={this.handleClick}
 									selectedKeys={[this.state.current]}
 									style={{
-										lineHeight: "49px",
+										lineHeight: "59px",
 										borderBottom: "0.15px solid #E4E4E4"
 									}}
 								>
@@ -70,9 +70,7 @@ class Navbar extends Component {
 											<a>Pekerjaan</a>
 										</Link>
 									</Menu.Item>
-									<SubMenu
-										title={<Avatar style={{ marginBottom: "12px" }}>U</Avatar>}
-									>
+									<SubMenu title={<Avatar>U</Avatar>}>
 										<Menu.Item key='3'>Profile</Menu.Item>
 										<Menu.Item key='4' onClick={this.handleLogout}>
 											Logout

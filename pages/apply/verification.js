@@ -1,10 +1,30 @@
 import React, { Component } from "react"
 import { Layout, Row, Col, Typography, Steps, Icon, Card, Button } from "antd"
 import { connect } from "react-redux"
+import Router, { withRouter } from "next/router"
 
 import Navbar from "../../components/navbar"
-
+import initialize from "../../utils/initialize"
 class UserVerification extends Component {
+	constructor() {
+		super()
+		this.state = {
+			token: ""
+		}
+	}
+
+	static async getInitialProps(ctx) {
+		await initialize(ctx)
+	}
+
+	handleNext = () => {
+		Router.push(`/apply/success?job_id=${this.props.router.query.job_id}`)
+	}
+
+	handleBack = () => {
+		Router.push(`/apply/profile?job_id=${this.props.router.query.job_id}`)
+	}
+
 	render() {
 		const { Content } = Layout
 		const { Step } = Steps
@@ -53,6 +73,7 @@ class UserVerification extends Component {
 									size='large'
 									block
 									style={{ marginTop: "30px" }}
+									onClick={this.handleNext}
 								>
 									Benar dan Lanjutkan
 								</Button>
@@ -61,6 +82,7 @@ class UserVerification extends Component {
 									size='large'
 									block
 									style={{ marginTop: "20px" }}
+									onClick={this.handleBack}
 								>
 									Kembali
 								</Button>
@@ -81,4 +103,6 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps)(UserVerification)
+const RouterUserVerification = withRouter(UserVerification)
+
+export default connect(mapStateToProps)(RouterUserVerification)

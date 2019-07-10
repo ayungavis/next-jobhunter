@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Typography, Icon, Row, Col, Layout, Form, Input, Button } from "antd"
+import { Typography, Icon, Row, Col, Layout, Form, Input, Button, message } from "antd"
 import { connect } from "react-redux"
 import Link from "next/link"
 import Router from "next/router"
@@ -54,6 +54,7 @@ class Register extends Component {
 					)
 					.then(res => {
 						setCookie("token", this.props.auth.data.token)
+						message.success("Selamat! Akun Anda berhasil dibuat dan otomatis masuk.")
 						Router.push("/")
 					})
 			}

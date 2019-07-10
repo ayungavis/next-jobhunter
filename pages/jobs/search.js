@@ -12,15 +12,16 @@ import {
 	Checkbox,
 	Select,
 	Affix,
-	List,
 	Collapse
 } from "antd"
 import { connect } from "react-redux"
 import Link from "next/link"
+import cookie from "js-cookie"
+import Router from "next/router"
 
 import Navbar from "../../components/navbar"
 import { getStatus } from "../../redux/actions/auth"
-import initialize from "../../utils/initialize"
+import { getVacancy } from "../../redux/actions/vacancies"
 
 const datePosts = ["Past 24 hours", "Past Week", "Past Month", "Any Time"]
 const experienceLevels = ["Entry Level", "Associate", "Mid-Senior Level", "Director", "Executive"]
@@ -33,7 +34,8 @@ class JobSearch extends Component {
 		super()
 		this.state = {
 			search: 0,
-			filter: 80
+			filter: 80,
+			token: cookie.get("token")
 		}
 	}
 
@@ -42,10 +44,20 @@ class JobSearch extends Component {
 			const token = await ctx.req.headers.cookie
 			if (token) {
 				const action = getStatus(token.split("=")[1])
+				const vacancies = getVacancy(token.split("=")[1])
 				ctx.store.dispatch(action)
+				ctx.store.dispatch(vacancies)
 				return action.payload.then(payload => {}).catch(err => {})
 			}
 		}
+	}
+
+	componentWillMount() {
+		this.getVacancy()
+	}
+
+	getVacancy() {
+		this.props.dispatch(getVacancy(this.state.token))
 	}
 
 	renderDatePost() {
@@ -69,55 +81,60 @@ class JobSearch extends Component {
 	}
 
 	renderList() {
-		for (let i = 0; i < 10; i++) {
-			const { Text } = Typography
-			return (
-				<Card style={{ width: "100%", marginBottom: "20px" }} hoverable={true}>
-					<Row gutter={20}>
-						<Col span={4} justify='center' align='middle' type='flex'>
-							<img src='../static/images/icon.png' alt='photo' width={80} />
-						</Col>
-						<Col span={14} justify='start' align='top' type='flex'>
-							<Text
-								style={{ fontSize: 24, marginLeft: "-10px", color: "black" }}
-								strong
-							>
-								<Link href='/jobs/detail'>
-									<a>Full Stack Developer</a>
-								</Link>
-							</Text>
-							<br />
-							<Text style={{ fontSize: 16 }} strong>
-								Tokopedia <Icon type='safety-certificate' theme='twoTone' />
-							</Text>
-							<br />
-							<Text type='secondary' style={{ fontSize: 14 }}>
-								<Icon type='environment' /> Jakarta, Indonesia ·{" "}
-								<Icon type='wallet' /> 6.000.000 - 10.000.000 IDR/bulan
-							</Text>
-							<br />
-							<br />
-							<Text type='secondary'>
-								Diposting 4 hari lalu · Lamar sebelum 30 Juli 2019
-							</Text>
-						</Col>
-						<Col span={6} justify='center' align='middle' type='flex'>
-							<Button size='large' type='primary' block>
-								Lamar
-							</Button>
-							<Button size='large' type='link'>
-								<Icon type='star' /> Simpan
-							</Button>
-						</Col>
-					</Row>
-				</Card>
-			)
-		}
+		const { Text } = Typography
+		return this.props.vacancies.data.map((item, key) => (
+			<Card
+				style={{ width: "100%", marginBottom: "20px" }}
+				hoverable={true}
+				loading={item.loading}
+			>
+				<Row gutter={20}>
+					<Col span={4} justify='center' align='middle' type='flex'>
+						<img src='../static/images/icon.png' alt='photo' width={80} />
+					</Col>
+					<Col span={14} justify='start' align='top' type='flex'>
+						<Text style={{ fontSize: 24, color: "black" }} strong>
+							<Link href={`/jobs/detail?job_id=${item.job_id}`}>
+								<a>{item.job_position}</a>
+							</Link>
+						</Text>
+						<br />
+						<Text style={{ fontSize: 16 }} strong>
+							{item.companies_name} <Icon type='safety-certificate' theme='twoTone' />
+						</Text>
+						<br />
+						<Text type='secondary' style={{ fontSize: 14 }}>
+							<Icon type='environment' /> {item.job_city}, {item.job_country} ·{" "}
+							<Icon type='wallet' /> {item.start_salary_job} - {item.end_salary_job}{" "}
+							IDR/bulan
+						</Text>
+						<br />
+						<br />
+						<Text type='secondary'>
+							{/* Diposting 4 hari lalu ·  */}Lamar sebelum {item.closing_date}
+						</Text>
+					</Col>
+					<Col span={6} justify='center' align='middle' type='flex'>
+						<Button
+							size='large'
+							type='primary'
+							onClick={() => Router.push(`/jobs/confirmation?job_id=${item.job_id}`)}
+							block
+						>
+							Lamar
+						</Button>
+						<Button size='large' type='link'>
+							<Icon type='star' /> Simpan
+						</Button>
+					</Col>
+				</Row>
+			</Card>
+		))
 	}
 
-	handleDatePosts = value => {
-		console.log("Check", value)
-	}
+	/* handleApplyJob = id => {
+		Router.push(`/jobs/confirmation?job_id=${id}`)
+	} */
 
 	render() {
 		const { Content } = Layout
@@ -126,8 +143,8 @@ class JobSearch extends Component {
 		const { Title, Text } = Typography
 		const { getFieldDecorator } = this.props.form
 		return (
-			<Layout>
-				<Navbar isLoggedIn={this.props.auth.isLogin} color='transparent' />
+			<Layout style={{ background: "#FAF9F7" }}>
+				<Navbar isLoggedIn={this.props.auth.isLogin} />
 				<Content>
 					<div style={{ marginTop: "50px" }} />
 					<Affix offsetTop={this.state.search}>
@@ -135,7 +152,7 @@ class JobSearch extends Component {
 							justify='center'
 							align='middle'
 							type='flex'
-							style={{ height: "60px", background: "#ffffff" }}
+							style={{ height: "60px", background: "#FAF9F7" }}
 						>
 							<Col span={18}>
 								<Form onSubmit={this.handleSearch}>

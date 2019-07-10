@@ -2,11 +2,33 @@ import React, { Component } from "react"
 import { Layout, Row, Col, Typography, Icon, Button, Card } from "antd"
 import { connect } from "react-redux"
 import Link from "next/link"
-import Router from "next/link"
+import cookie from "js-cookie"
+import Router, { withRouter } from "next/router"
 
 import Navbar from "../../components/navbar"
+import { getVacancyInfo } from "../../redux/actions/vacancies"
+import initialize from "../../utils/initialize"
 
 class JobDetail extends Component {
+	constructor() {
+		super()
+		this.state = {
+			token: cookie.get("token")
+		}
+	}
+
+	static async getInitialProps(ctx) {
+		await initialize(ctx)
+	}
+
+	componentWillMount() {
+		this.getVacancyInfo()
+	}
+
+	getVacancyInfo() {
+		this.props.dispatch(getVacancyInfo(this.props.router.query.job_id, this.state.token))
+	}
+
 	renderList() {
 		for (let i = 0; i < 10; i++) {
 			const { Text } = Typography
@@ -17,10 +39,7 @@ class JobDetail extends Component {
 							<img src='../static/images/icon.png' alt='photo' width={80} />
 						</Col>
 						<Col span={14} justify='start' align='top' type='flex'>
-							<Text
-								style={{ fontSize: 24, marginLeft: "-10px", color: "black" }}
-								strong
-							>
+							<Text style={{ fontSize: 24, color: "black" }} strong>
 								<Link href='/jobs/detail'>
 									<a>Full Stack Developer</a>
 								</Link>
@@ -54,10 +73,6 @@ class JobDetail extends Component {
 		}
 	}
 
-	handleApplyJob = () => {
-		Router.push("/jobs/confirmation")
-	}
-
 	render() {
 		const { Content } = Layout
 		const { Title, Text } = Typography
@@ -86,21 +101,25 @@ class JobDetail extends Component {
 						</Col>
 						<Col span={8} style={{ marginLeft: "120px", marginTop: "10px" }}>
 							<Text style={{ fontSize: 24, color: "black" }} strong>
-								Full Stack Developer
+								{this.props.vacancies.item.job_position}
 							</Text>
 							<br />
 							<Text style={{ fontSize: 16 }} strong>
-								Tokopedia <Icon type='safety-certificate' theme='twoTone' />
+								{this.props.vacancies.item.companies_name}{" "}
+								<Icon type='safety-certificate' theme='twoTone' />
 							</Text>
 							<br />
 							<Text type='secondary' style={{ fontSize: 14 }}>
-								<Icon type='environment' /> Jakarta, Indonesia ·{" "}
-								<Icon type='wallet' /> 6.000.000 - 10.000.000 IDR/bulan
+								<Icon type='environment' /> {this.props.vacancies.item.job_city},{" "}
+								{this.props.vacancies.item.job_country} · <Icon type='wallet' />{" "}
+								{this.props.vacancies.item.start_salary_job} -{" "}
+								{this.props.vacancies.item.end_salary_job} IDR/bulan
 							</Text>
 							<br />
 							<br />
 							<Text type='secondary'>
-								Diposting 4 hari lalu · Lamar sebelum 30 Juli 2019
+								{/* Diposting 4 hari lalu ·  */}Lamar sebelum{" "}
+								{this.props.vacancies.item.closing_date}
 							</Text>
 						</Col>
 						<Col
@@ -112,7 +131,18 @@ class JobDetail extends Component {
 								display: "flex"
 							}}
 						>
-							<Button size='large' type='primary' onClick={this.handleApplyJob} block>
+							<Button
+								size='large'
+								type='primary'
+								onClick={() =>
+									Router.push(
+										`/jobs/confirmation?job_id=${
+											this.props.vacancies.item.job_id
+										}`
+									)
+								}
+								block
+							>
 								Lamar Sekarang
 							</Button>
 						</Col>
@@ -122,28 +152,17 @@ class JobDetail extends Component {
 							<Card hoverable>
 								<Title level={4}>Deskripsi Pekerjaan</Title>
 								<Text>
-									Lorem ipsum dolor, sit amet consectetur adipisicing elit. Animi
-									et itaque necessitatibus expedita nostrum, rerum pariatur
-									aliquid ullam ratione vitae! Perferendis ipsum quo officia
-									soluta laboriosam voluptatum, cumque asperiores reiciendis!
+									{this.props.vacancies.item.job_description}
 									<br />
 									<br />
 								</Text>
 								<Title level={4}>Minimum Kualifikasi</Title>
-								<Text>
-									Lorem ipsum dolor, sit amet consectetur adipisicing elit. Animi
-									et itaque necessitatibus expedita nostrum, rerum pariatur
-									aliquid ullam ratione vitae! Perferendis ipsum quo officia
-									soluta laboriosam voluptatum, cumque asperiores reiciendis!
-								</Text>
+								<Text>{this.props.vacancies.item.job_qualification}</Text>
 							</Card>
 							<Card hoverable style={{ marginTop: "20px" }}>
 								<Title level={4}>Tentang Perusahaan</Title>
 								<Text>
-									Lorem ipsum dolor, sit amet consectetur adipisicing elit. Animi
-									et itaque necessitatibus expedita nostrum, rerum pariatur
-									aliquid ullam ratione vitae! Perferendis ipsum quo officia
-									soluta laboriosam voluptatum, cumque asperiores reiciendis!
+									{this.props.vacancies.item.companies_description}
 									<br />
 									<br />
 								</Text>
@@ -153,9 +172,11 @@ class JobDetail extends Component {
 											Website
 											<br />
 										</Text>
-										<Text style={{ marginLeft: "-10px" }}>
-											<Link href=''>
-												<a>http://www.website.com</a>
+										<Text>
+											<Link
+												href={this.props.vacancies.item.companies_website}
+											>
+												<a>{this.props.vacancies.item.companies_website}</a>
 											</Link>
 										</Text>
 									</Col>
@@ -164,7 +185,7 @@ class JobDetail extends Component {
 											Kategori
 											<br />
 										</Text>
-										<Text>Business</Text>
+										<Text>-</Text>
 									</Col>
 								</Row>
 							</Card>
@@ -176,7 +197,7 @@ class JobDetail extends Component {
 									<br />
 								</Text>
 								<Text>
-									Full Time
+									{this.props.vacancies.item.job_types_name}
 									<br />
 									<br />
 								</Text>
@@ -185,7 +206,7 @@ class JobDetail extends Component {
 									<br />
 								</Text>
 								<Text>
-									Fresh Graduate
+									{this.props.vacancies.item.job_levels_name}
 									<br />
 									<br />
 								</Text>
@@ -194,7 +215,7 @@ class JobDetail extends Component {
 									<br />
 								</Text>
 								<Text>
-									IT and Software
+									{this.props.vacancies.item.job_categories_name}
 									<br />
 									<br />
 								</Text>
@@ -202,7 +223,7 @@ class JobDetail extends Component {
 									Pendidikan Tearkhir
 									<br />
 								</Text>
-								<Text>Strata 1 (S1)</Text>
+								<Text>{this.props.vacancies.item.educational_levels_name}</Text>
 							</Card>
 						</Col>
 					</Row>
@@ -228,4 +249,6 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps)(JobDetail)
+const RouterJobDetail = withRouter(JobDetail)
+
+export default connect(mapStateToProps)(RouterJobDetail)

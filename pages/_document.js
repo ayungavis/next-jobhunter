@@ -6,7 +6,7 @@ export default class MyDocument extends Document {
 			<html>
 				<Head>
 					<meta name='viewport' content='width=device-width, initial-scale=1.0' />
-					<link rel='stylesheet/less' type='text/css' href='/static/less/style.less' />
+					<link rel='stylesheet/less' type='text/css' href='../static/less/style.less' />
 				</Head>
 				<body>
 					<Main />

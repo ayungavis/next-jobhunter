@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { Layout } from "antd"
 import { connect } from "react-redux"
+import Router from "next/router"
 
 import { getStatus } from "../redux/actions/auth"
 import Landing from "./landing"
@@ -41,7 +42,7 @@ class Index extends Component {
 		return (
 			<div>
 				{this.props.auth.isLoading ? (
-					Route.push("/users/feed")
+					Router.push("/users/feed")
 				) : (
 					<Landing isLoggedIn={this.props.auth.isLoading} />
 				)}

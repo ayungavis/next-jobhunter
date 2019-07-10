@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Typography, Icon, Row, Col, Layout, Form, Input, Button, Checkbox } from "antd"
+import { Typography, Icon, Row, Col, Layout, Form, Input, Button, Checkbox, message } from "antd"
 import { connect } from "react-redux"
 import Link from "next/link"
 import Router from "next/router"
@@ -52,6 +52,7 @@ class Login extends Component {
 					.then(res => {
 						setCookie("token", this.props.auth.data.token)
 						Router.push("/users/feed")
+						// message.success("Berhasil masuk.")
 					})
 			}
 		})

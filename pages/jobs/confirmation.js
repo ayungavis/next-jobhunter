@@ -2,17 +2,22 @@ import React, { Component } from "react"
 import { Layout, Row, Col, Typography, Card, Button, Avatar } from "antd"
 import { connect } from "react-redux"
 import Link from "next/link"
-import Router from "next/router"
+import Router, { withRouter } from "next/router"
 
 import Navbar from "../../components/navbar"
+import initialize from "../../utils/initialize"
 
 class JobConfirmation extends Component {
+	static async getInitialProps(ctx) {
+		await initialize(ctx)
+	}
+
 	handleApplyJob = () => {
-		Router.push("/users/profile")
+		Router.push(`/users/profile?job_id=${this.props.router.query.job_id}`)
 	}
 
 	handleCreateProfile = () => {
-		Router.push("/register")
+		Router.push(`/register?job_id=${this.props.router.query.job_id}`)
 	}
 
 	render() {
@@ -77,4 +82,6 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps)(JobConfirmation)
+const RouterJobConfirmation = withRouter(JobConfirmation)
+
+export default connect(mapStateToProps)(RouterJobConfirmation)

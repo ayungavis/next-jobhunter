@@ -2,10 +2,24 @@ import React, { Component } from "react"
 import { Layout, Row, Col, Typography, Result, Button, Icon, Steps } from "antd"
 import { connect } from "react-redux"
 import Link from "next/link"
+import Router from "next/router"
 
 import Navbar from "../../components/navbar"
+import initialize from "../../utils/initialize"
 
 class UserSuccess extends Component {
+	static async getInitialProps(ctx) {
+		await initialize(ctx)
+	}
+
+	handleToJob() {
+		Router.push("/jobs/search")
+	}
+
+	handleToDashboard() {
+		Router.push("/users/feed")
+	}
+
 	render() {
 		const { Content } = Layout
 		const { Step } = Steps
@@ -40,13 +54,15 @@ class UserSuccess extends Component {
 							<Result
 								status='success'
 								title='Selamat, kamu sudah selesai melamar!'
-								extra={
-									<Button type='primary' size='large'>
-										<Link href='/'>
-											<a>Ke Beranda</a>
-										</Link>
+								subTitle='Tunggu perusahaan untuk memberikan respon terhadap lamaranmu.'
+								extra={[
+									<Button key='jobs' type='primary' onClick={this.handleToJob}>
+										Lihat Pekerjaan Lainya
+									</Button>,
+									<Button key='feed' onClick={this.handleToDashboard}>
+										Kembali ke Beranda
 									</Button>
-								}
+								]}
 							/>
 						</Col>
 					</Row>
