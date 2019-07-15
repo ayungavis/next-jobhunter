@@ -2,6 +2,16 @@ import axios from "axios"
 
 import server from "../../config/server"
 
+export const searchVacancy = params => {
+	return {
+		type: "SEARCH_VACANCY",
+		payload: axios({
+			method: "get",
+			url: `${server.api}/jobs?search=${params}`
+		})
+	}
+}
+
 export const getVacancy = token => {
 	return {
 		type: "GET_VACANCY",

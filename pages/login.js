@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Typography, Icon, Row, Col, Layout, Form, Input, Button, Checkbox, message } from "antd"
 import { connect } from "react-redux"
 import Link from "next/link"
-import Router from "next/router"
+import Router, { withRouter } from "next/router"
 
 import { getStatus, postLogin } from "../redux/actions/auth"
 import { setCookie } from "../utils/cookie"
@@ -50,8 +50,11 @@ class Login extends Component {
 						})
 					)
 					.then(res => {
+						this.setState({ loading: false })
 						setCookie("token", this.props.auth.data.token)
-						Router.push("/users/feed")
+						this.props.router.query.job_id
+							? Router.push(`/apply/profile?job_id=${this.props.router.query.job_id}`)
+							: Router.push("/users/feed")
 						// message.success("Berhasil masuk.")
 					})
 			}
@@ -169,7 +172,7 @@ class Login extends Component {
 														htmlType='submit'
 														className='login-form-button'
 														size='large'
-														loading={this.props.auth.isLoading}
+														loading={this.state.loading}
 														onClick={this.enterLoading}
 														block
 													>
@@ -179,9 +182,19 @@ class Login extends Component {
 												<Row justify='center' type='flex'>
 													<div>
 														Or{" "}
-														<Link href='/register'>
-															<a>register now!</a>
-														</Link>
+														{this.props.router.query.job_id ? (
+															<Link
+																href={`/register?job_id=${
+																	this.props.router.query.job_id
+																}`}
+															>
+																<a>register now!</a>
+															</Link>
+														) : (
+															<Link href='/register'>
+																<a>register now!</a>
+															</Link>
+														)}
 													</div>
 												</Row>
 											</Form.Item>
@@ -204,5 +217,6 @@ const mapStateToProps = state => {
 }
 
 const WrappedLogin = Form.create()(Login)
+const RouterLogin = withRouter(WrappedLogin)
 
-export default connect(mapStateToProps)(WrappedLogin)
+export default connect(mapStateToProps)(RouterLogin)

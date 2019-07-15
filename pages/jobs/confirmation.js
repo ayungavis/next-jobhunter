@@ -13,7 +13,7 @@ class JobConfirmation extends Component {
 	}
 
 	handleApplyJob = () => {
-		Router.push(`/users/profile?job_id=${this.props.router.query.job_id}`)
+		Router.push(`/apply/profile?job_id=${this.props.router.query.job_id}`)
 	}
 
 	handleCreateProfile = () => {
@@ -24,7 +24,7 @@ class JobConfirmation extends Component {
 		const { Content } = Layout
 		const { Title, Text } = Typography
 		return (
-			<Layout>
+			<Layout style={{ background: "#FAF9F7" }}>
 				<Navbar isLoggedIn={this.props.auth.isLogin} />
 				<Content>
 					<Row justify='center' type='flex' style={{ marginTop: "80px" }}>

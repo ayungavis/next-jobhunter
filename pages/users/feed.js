@@ -119,7 +119,7 @@ class UserFeed extends Component {
 			<Card
 				cover={
 					<img
-						src='../../static/images/profile-background.png'
+						src={this.props.users.item.profile_photo_header}
 						alt='profile-background'
 						style={{ width: "100%" }}
 					/>
@@ -128,19 +128,23 @@ class UserFeed extends Component {
 			>
 				<Avatar
 					size={120}
-					icon='user'
+					src={this.props.users.item.profile_photo_profile}
 					style={{
 						position: "absolute",
 						top: 30,
-						left: 75
+						left: 75,
+						border: "4px solid white"
 					}}
 				/>
 				<Row justify='center' type='flex' style={{ marginTop: "60px" }}>
 					<Col style={{ textAlign: "center", alignSelf: "center" }}>
 						<Title level={3}>
-							{this.props.users.item.first_name} {this.props.users.item.last_name}
+							{this.props.users.item.user_first_name}{" "}
+							{this.props.users.item.user_last_name}
 						</Title>
-						<Text style={{ fontSize: 16, color: "grey" }}>Fullstack Developer</Text>
+						<Text style={{ fontSize: 16, color: "grey" }}>
+							{this.props.users.item.profile_headline}
+						</Text>
 					</Col>
 				</Row>
 				<Row
@@ -331,7 +335,6 @@ class UserFeed extends Component {
 const mapStateToProps = state => {
 	return {
 		auth: state.auth,
-		vacancies: state.vacancies,
 		users: state.users
 	}
 }

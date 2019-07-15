@@ -5,6 +5,7 @@ import Router from "next/router"
 
 import Navbar from "../components/navbar"
 import { getStatus } from "../redux/actions/auth"
+import { searchVacancy } from "../redux/actions/vacancies"
 
 class Landing extends Component {
 	constructor() {
@@ -32,9 +33,10 @@ class Landing extends Component {
 		}
 	}
 
-	enterLoading = () => {
-		this.setState({ loading: true })
-		Router.push("/jobs/search")
+	handleSearch = () => {
+		this.props.dispatch(searchVacancy(this.refs.search.state.value)).then(res => {
+			Router.push(`/jobs/search?query=${this.refs.search.state.value}`)
+		})
 	}
 
 	render() {
@@ -68,10 +70,11 @@ class Landing extends Component {
 								Temukan pekerjaan impianmu di sini!
 							</Title>
 							<Col span={20} style={{ marginTop: "10px" }}>
-								<Form onSubmit={this.handleSearch}>
+								<Form>
 									<Form.Item>
 										<Input
 											size='large'
+											ref='search'
 											placeholder='Cari judul pekerjaan atau perusahaan'
 											prefix={
 												<Icon type='search' style={{ color: "#000000" }} />
@@ -85,8 +88,8 @@ class Landing extends Component {
 											htmlType='submit'
 											size='large'
 											style={{ background: "#01478D" }}
-											loading={this.state.loading}
-											onClick={this.enterLoading}
+											loading={this.props.vacancies.isLoading}
+											onClick={this.handleSearch}
 										>
 											<Text style={{ color: "white" }}>Cari Pekerjaan</Text>
 											<Icon type='right' style={{ color: "white" }} />
@@ -103,6 +106,20 @@ class Landing extends Component {
 							/>
 						</Col>
 					</Row>
+					{/* <Row
+						justify='center'
+						align='middle'
+						type='flex'
+						gutter={24}
+						style={{ background: "#FAF9F7", height: "520px" }}
+					>
+						<Col span={6}>
+							<Title level={2}>Saran pencarian pekerjaan untuk anda</Title>
+						</Col>
+						<Col span={14}>
+							<Text>Test</Text>
+						</Col>
+					</Row> */}
 				</Content>
 			</Layout>
 		)
@@ -111,7 +128,8 @@ class Landing extends Component {
 
 const mapStateToProps = state => {
 	return {
-		auth: state.auth
+		auth: state.auth,
+		vacancies: state.vacancies
 	}
 }
 

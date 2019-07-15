@@ -71,7 +71,11 @@ class Navbar extends Component {
 										</Link>
 									</Menu.Item>
 									<SubMenu title={<Avatar>U</Avatar>}>
-										<Menu.Item key='3'>Profile</Menu.Item>
+										<Menu.Item key='3'>
+											<Link href='/users/profile'>
+												<a>Profile</a>
+											</Link>
+										</Menu.Item>
 										<Menu.Item key='4' onClick={this.handleLogout}>
 											Logout
 										</Menu.Item>

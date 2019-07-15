@@ -5,7 +5,7 @@ import Router, { withRouter } from "next/router"
 
 import Navbar from "../../components/navbar"
 import initialize from "../../utils/initialize"
-class UserVerification extends Component {
+class ApplyVerification extends Component {
 	constructor() {
 		super()
 		this.state = {
@@ -103,6 +103,6 @@ const mapStateToProps = state => {
 	}
 }
 
-const RouterUserVerification = withRouter(UserVerification)
+const RouterApplyVerification = withRouter(ApplyVerification)
 
-export default connect(mapStateToProps)(RouterUserVerification)
+export default connect(mapStateToProps)(RouterApplyVerification)

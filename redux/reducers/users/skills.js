@@ -4,60 +4,51 @@ const initialState = {
 	isLoading: false
 }
 
-const vacancies = (state = initialState, action) => {
+const userSkills = (state = initialState, action) => {
 	switch (action.type) {
-		case "SEARCH_VACANCY_PENDING":
+		case "GET_USERSKILL_PENDING":
 			return { ...state, isLoading: true }
 
-		case "SEARCH_VACANCY_REJECTED":
+		case "GET_USERSKILL_REJECTED":
 			return { ...state, isLoading: false }
 
-		case "SEARCH_VACANCY_FULFILLED":
+		case "GET_USERSKILL_FULFILLED":
 			return { ...state, data: action.payload.data, isLoading: false }
 
-		case "GET_VACANCY_PENDING":
+		case "GET_USERSKILL_INFO_PENDING":
 			return { ...state, isLoading: true }
 
-		case "GET_VACANCY_REJECTED":
+		case "GET_USERSKILL_INFO_REJECTED":
 			return { ...state, isLoading: false }
 
-		case "GET_VACANCY_FULFILLED":
+		case "GET_USERSKILL_INFO_FULFILLED":
 			return { ...state, data: action.payload.data, isLoading: false }
 
-		case "GET_VACANCY_INFO_PENDING":
+		case "CREATE_USERSKILL_PENDING":
 			return { ...state, isLoading: true }
 
-		case "GET_VACANCY_INFO_REJECTED":
+		case "CREATE_USERSKILL_REJECTED":
 			return { ...state, isLoading: false }
 
-		case "GET_VACANCY_INFO_FULFILLED":
-			return { ...state, item: action.payload.data, isLoading: false }
+		case "CREATE_USERSKILL_FULFILLED":
+			return { ...state, isLoading: false }
 
-		case "CREATE_VACANCY_PENDING":
+		case "UPDATE_USERSKILL_PENDING":
 			return { ...state, isLoading: true }
 
-		case "CREATE_VACANCY_REJECTED":
+		case "UPDATE_USERSKILL_REJECTED":
 			return { ...state, isLoading: false }
 
-		case "CREATE_VACANCY_FULFILLED":
+		case "UPDATE_USERSKILL_FULFILLED":
 			return { ...state, isLoading: false }
 
-		case "UPDATE_VACANCY_PENDING":
+		case "DELETE_USERSKILL_PENDING":
 			return { ...state, isLoading: true }
 
-		case "UPDATE_VACANCY_REJECTED":
+		case "DELETE_USERSKILL_REJECTED":
 			return { ...state, isLoading: false }
 
-		case "UPDATE_VACANCY_FULFILLED":
-			return { ...state, isLoading: false }
-
-		case "DELETE_VACANCY_PENDING":
-			return { ...state, isLoading: true }
-
-		case "DELETE_VACANCY_REJECTED":
-			return { ...state, isLoading: false }
-
-		case "DELETE_VACANCY_FULFILLED":
+		case "DELETE_USERSKILL_FULFILLED":
 			const newDataAfterDelete = state.data.data.filter(
 				data => data.id != action.payload.data.id
 			)
@@ -68,4 +59,4 @@ const vacancies = (state = initialState, action) => {
 	}
 }
 
-export default vacancies
+export default userSkills

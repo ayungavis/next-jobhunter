@@ -12,16 +12,18 @@ import {
 	Checkbox,
 	Select,
 	Affix,
-	Collapse
+	Collapse,
+	Skeleton,
+	Result
 } from "antd"
 import { connect } from "react-redux"
 import Link from "next/link"
 import cookie from "js-cookie"
-import Router from "next/router"
+import Router, { withRouter } from "next/router"
 
 import Navbar from "../../components/navbar"
 import { getStatus } from "../../redux/actions/auth"
-import { getVacancy } from "../../redux/actions/vacancies"
+import { searchVacancy, getVacancy } from "../../redux/actions/vacancies"
 
 const datePosts = ["Past 24 hours", "Past Week", "Past Month", "Any Time"]
 const experienceLevels = ["Entry Level", "Associate", "Mid-Senior Level", "Director", "Executive"]
@@ -34,6 +36,7 @@ class JobSearch extends Component {
 		super()
 		this.state = {
 			search: 0,
+			searchText: "",
 			filter: 80,
 			token: cookie.get("token")
 		}
@@ -52,12 +55,26 @@ class JobSearch extends Component {
 		}
 	}
 
-	componentWillMount() {
-		this.getVacancy()
+	componentDidMount() {
+		if (this.props.router.query.query) {
+			if (this.props.router.query.query === "undefined") {
+				this.getVacancy()
+			} else {
+				this.searchVacancy(this.props.router.query.query)
+			}
+		} else return this.getVacancy()
 	}
 
 	getVacancy() {
 		this.props.dispatch(getVacancy(this.state.token))
+	}
+
+	searchVacancy(params) {
+		this.props.dispatch(searchVacancy(params))
+	}
+
+	handleSearch = () => {
+		this.props.dispatch(searchVacancy(this.refs.search.state.value))
 	}
 
 	renderDatePost() {
@@ -82,59 +99,68 @@ class JobSearch extends Component {
 
 	renderList() {
 		const { Text } = Typography
-		return this.props.vacancies.data.map((item, key) => (
-			<Card
-				style={{ width: "100%", marginBottom: "20px" }}
-				hoverable={true}
-				loading={item.loading}
-			>
-				<Row gutter={20}>
-					<Col span={4} justify='center' align='middle' type='flex'>
-						<img src='../static/images/icon.png' alt='photo' width={80} />
-					</Col>
-					<Col span={14} justify='start' align='top' type='flex'>
-						<Text style={{ fontSize: 24, color: "black" }} strong>
-							<Link href={`/jobs/detail?job_id=${item.job_id}`}>
-								<a>{item.job_position}</a>
-							</Link>
-						</Text>
-						<br />
-						<Text style={{ fontSize: 16 }} strong>
-							{item.companies_name} <Icon type='safety-certificate' theme='twoTone' />
-						</Text>
-						<br />
-						<Text type='secondary' style={{ fontSize: 14 }}>
-							<Icon type='environment' /> {item.job_city}, {item.job_country} ·{" "}
-							<Icon type='wallet' /> {item.start_salary_job} - {item.end_salary_job}{" "}
-							IDR/bulan
-						</Text>
-						<br />
-						<br />
-						<Text type='secondary'>
-							{/* Diposting 4 hari lalu ·  */}Lamar sebelum {item.closing_date}
-						</Text>
-					</Col>
-					<Col span={6} justify='center' align='middle' type='flex'>
-						<Button
-							size='large'
-							type='primary'
-							onClick={() => Router.push(`/jobs/confirmation?job_id=${item.job_id}`)}
-							block
-						>
-							Lamar
-						</Button>
-						<Button size='large' type='link'>
-							<Icon type='star' /> Simpan
-						</Button>
-					</Col>
-				</Row>
-			</Card>
-		))
+		const { vacancies } = this.props
+		return vacancies.data ? (
+			vacancies.data.map((item, key) => (
+				<Card
+					style={{ width: "100%", marginBottom: "20px" }}
+					hoverable={true}
+					loading={item.loading}
+				>
+					<Row gutter={20}>
+						<Col span={4} justify='center' align='middle' type='flex'>
+							<img src='../static/images/icon.png' alt='photo' width={80} />
+						</Col>
+						<Col span={14} justify='start' align='top' type='flex'>
+							<Text style={{ fontSize: 24, color: "black" }} strong>
+								<Link href={`/jobs/detail?job_id=${item.job_id}`}>
+									<a>{item.job_position}</a>
+								</Link>
+							</Text>
+							<br />
+							<Text style={{ fontSize: 16 }} strong>
+								{item.companies_name}{" "}
+								<Icon type='safety-certificate' theme='twoTone' />
+							</Text>
+							<br />
+							<Text type='secondary' style={{ fontSize: 14 }}>
+								<Icon type='environment' /> {item.job_city}, {item.job_country} ·{" "}
+								<Icon type='wallet' /> {item.start_salary_job} -{" "}
+								{item.end_salary_job} IDR/bulan
+							</Text>
+							<br />
+							<br />
+							<Text type='secondary'>
+								{/* Diposting 4 hari lalu ·  */}Lamar sebelum {item.closing_date}
+							</Text>
+						</Col>
+						<Col span={6} justify='center' align='middle' type='flex'>
+							<Button
+								size='large'
+								type='primary'
+								onClick={() =>
+									Router.push(`/jobs/confirmation?job_id=${item.job_id}`)
+								}
+								block
+							>
+								Lamar
+							</Button>
+							<Button size='large' type='link'>
+								<Icon type='star' /> Simpan
+							</Button>
+						</Col>
+					</Row>
+				</Card>
+			))
+		) : (
+			<Result
+				status='404'
+				title='404'
+				subTitle="'Sorry, the page you visited does not exist."
+				extra={<Button type='primary'>Back Home</Button>}
+			/>
+		)
 	}
-
-	/* handleApplyJob = id => {
-		Router.push(`/jobs/confirmation?job_id=${id}`)
-	} */
 
 	render() {
 		const { Content } = Layout
@@ -142,6 +168,7 @@ class JobSearch extends Component {
 		const { Panel } = Collapse
 		const { Title, Text } = Typography
 		const { getFieldDecorator } = this.props.form
+		const { isLoading } = this.state
 		return (
 			<Layout style={{ background: "#FAF9F7" }}>
 				<Navbar isLoggedIn={this.props.auth.isLogin} />
@@ -155,11 +182,12 @@ class JobSearch extends Component {
 							style={{ height: "60px", background: "#FAF9F7" }}
 						>
 							<Col span={18}>
-								<Form onSubmit={this.handleSearch}>
+								<Form>
 									<Row justify='space-between' type='flex' style={{}}>
 										<Col md={20}>
 											<Input
 												size='large'
+												ref='search'
 												placeholder='Cari judul pekerjaan atau perusahaan'
 												prefix={
 													<Icon
@@ -174,6 +202,7 @@ class JobSearch extends Component {
 												size='large'
 												type='primary'
 												htmlType='submit'
+												onClick={this.handleSearch}
 												block
 											>
 												Cari
@@ -212,7 +241,17 @@ class JobSearch extends Component {
 								</Collapse>
 								{/* </Affix> */}
 							</Col>
-							<Col md={18}>{this.renderList()}</Col>
+							<Col md={18}>
+								{this.props.vacancies.isLoading ? (
+									<Skeleton
+										loading={this.props.vacancies.isLoading}
+										avatar
+										paragraph={{ rows: 4 }}
+									/>
+								) : (
+									this.renderList()
+								)}
+							</Col>
 						</Col>
 					</Row>
 				</Content>
@@ -229,8 +268,9 @@ const mapStateToProps = state => {
 }
 
 const WrappedJobSearch = Form.create()(JobSearch)
+const RouterJobSearch = withRouter(WrappedJobSearch)
 
-export default connect(mapStateToProps)(WrappedJobSearch)
+export default connect(mapStateToProps)(RouterJobSearch)
 
 const checkboxStyle = {
 	display: "block",

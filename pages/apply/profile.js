@@ -22,7 +22,7 @@ import Navbar from "../../components/navbar"
 import { getUserInfo, updateUser } from "../../redux/actions/users"
 import initialize from "../../utils/initialize"
 
-class UserProfile extends Component {
+class ApplyProfile extends Component {
 	constructor() {
 		super()
 		this.state = {
@@ -54,17 +54,19 @@ class UserProfile extends Component {
 				this.props
 					.dispatch(
 						updateUser(this.state.token, {
-							id: this.props.users.item.id,
+							id: this.props.users.item.user_id,
 							first_name: values.first_name,
 							last_name: values.last_name,
 							username: this.props.users.item.username,
 							email: values.email,
-							password: this.props.users.item.password
+							password: this.props.users.item.user_password
 						})
 					)
 					.then(res => {
 						this.setState({ visible: false })
-						this.props.dispatch(getUserInfo(this.props.users.item.id, this.state.token))
+						this.props.dispatch(
+							getUserInfo(this.props.users.item.user_id, this.state.token)
+						)
 					})
 			}
 		})
@@ -92,7 +94,7 @@ class UserProfile extends Component {
 										message: "Please input first name!"
 									}
 								],
-								initialValue: this.props.users.item.first_name
+								initialValue: this.props.users.item.user_first_name
 							})(<Input placeholder='First name' />)}
 						</Form.Item>
 					</Col>
@@ -105,7 +107,7 @@ class UserProfile extends Component {
 										message: "Please input last name!"
 									}
 								],
-								initialValue: this.props.users.item.last_name
+								initialValue: this.props.users.item.user_last_name
 							})(<Input placeholder='Last name' />)}
 						</Form.Item>
 					</Col>
@@ -122,7 +124,7 @@ class UserProfile extends Component {
 								message: "Please input a valid email!"
 							}
 						],
-						initialValue: this.props.users.item.email
+						initialValue: this.props.users.item.user_email
 					})(<Input placeholder='Email' />)}
 				</Form.Item>
 			</Form>
@@ -163,17 +165,22 @@ class UserProfile extends Component {
 							<Col md={16}>
 								<Card title='Informasi Kontak' hoverable>
 									<Col span={6} justify='center' type='flex'>
-										<Avatar size={120} icon='user' />
+										<Avatar
+											size={120}
+											src={this.props.users.item.profile_photo_profile}
+										/>
 									</Col>
 									<Col span={18}>
 										<Title level={4}>
-											{this.props.users.item.first_name}{" "}
-											{this.props.users.item.last_name}
+											{this.props.users.item.user_first_name}{" "}
+											{this.props.users.item.user_last_name}
 										</Title>
 										<Text style={{ lineHeight: "26px" }}>
-											<Icon type='environment' /> Jakarta, Indonesia
+											<Icon type='environment' />{" "}
+											{this.props.users.item.contact_city},{" "}
+											{this.props.users.item.contact_country}
 											<br />
-											<Icon type='mail' /> {this.props.users.item.email}
+											<Icon type='mail' /> {this.props.users.item.user_email}
 											<br />
 											<Icon type='phone' /> +62 85732405860
 										</Text>
@@ -207,7 +214,7 @@ class UserProfile extends Component {
 						title='Edit Informasi'
 						visible={this.state.visible}
 						onOk={this.handleSubmit}
-						onCancle={this.handleCancel}
+						onCancel={this.handleCancel}
 						confirmLoading={this.props.users.isLoading}
 					>
 						{this.renderEditInformation(this.props.users.item)}
@@ -226,7 +233,7 @@ const mapStateToProps = state => {
 	}
 }
 
-const WrappedUserProfile = Form.create()(UserProfile)
-const RouterUserProfile = withRouter(WrappedUserProfile)
+const WrappedApplyProfile = Form.create()(ApplyProfile)
+const RouterApplyProfile = withRouter(WrappedApplyProfile)
 
-export default connect(mapStateToProps)(RouterUserProfile)
+export default connect(mapStateToProps)(RouterApplyProfile)

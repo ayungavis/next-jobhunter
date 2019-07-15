@@ -77,7 +77,7 @@ class JobDetail extends Component {
 		const { Content } = Layout
 		const { Title, Text } = Typography
 		return (
-			<Layout>
+			<Layout style={{ background: "#FAF9F7" }}>
 				<Navbar isLoggedIn={this.props.auth.isLogin} />
 				<Content>
 					<img

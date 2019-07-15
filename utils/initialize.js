@@ -15,7 +15,7 @@ export default function(ctx) {
 				ctx.store.dispatch(action)
 				return action.payload
 					.then(payload => {
-						return { user: payload.data }
+						// return { user: payload.data }
 					})
 					.catch(err => {
 						ctx.res.writeHead(302, {

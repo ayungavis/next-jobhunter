@@ -7,7 +7,7 @@ import Router from "next/router"
 import Navbar from "../../components/navbar"
 import initialize from "../../utils/initialize"
 
-class UserSuccess extends Component {
+class ApplySuccess extends Component {
 	static async getInitialProps(ctx) {
 		await initialize(ctx)
 	}
@@ -80,4 +80,4 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps)(UserSuccess)
+export default connect(mapStateToProps)(ApplySuccess)
