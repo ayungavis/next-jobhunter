@@ -102,7 +102,7 @@ class Navbar extends Component {
 										<Button type='primary' size='large'>
 											<Link href='/login'>
 												<a>
-													<strong>Masuk</strong>
+													<strong>{this.props.nama}</strong>
 												</a>
 											</Link>
 										</Button>

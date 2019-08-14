@@ -11,7 +11,8 @@ class Landing extends Component {
 	constructor() {
 		super()
 		this.state = {
-			loading: false
+			loading: false,
+			nama: "Hello"
 		}
 	}
 
@@ -45,7 +46,11 @@ class Landing extends Component {
 		const { getFieldDecorator } = this.props.form
 		return (
 			<Layout>
-				<Navbar isLoggedIn={this.props.isLoggedIn} color='transparent' />
+				<Navbar
+					isLoggedIn={this.props.isLoggedIn}
+					color='transparent'
+					nama={this.state.nama}
+				/>
 				<Content>
 					<Row
 						justify='center'
